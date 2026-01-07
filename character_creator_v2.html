@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H2U | AI Character Creator (Secure)</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #6F80B5;
+            --primary-glow: rgba(111, 128, 181, 0.4);
+            --bg-dark: #0A0F1E;
+            --bg-card: rgba(255, 255, 255, 0.05);
+            --bg-card-hover: rgba(255, 255, 255, 0.08);
+            --text-main: #FFFFFF;
+            --text-muted: #B0B7C3;
+            --border: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --accent: #E91E63;
+            --success: #4CAF50;
+            --warning: #FF9800;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(111, 128, 181, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(233, 30, 99, 0.05) 0%, transparent 40%);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(76, 175, 80, 0.15);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--success);
+            margin-top: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        @media (max-width: 900px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--glass-border);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h2 {
+            font-size: 1.25rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary);
+        }
+
+        .card.full-width { grid-column: 1 / -1; }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: white;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        textarea { resize: vertical; min-height: 80px; }
+
+        /* Tags */
+        .tag-category {
+            margin-bottom: 20px;
+        }
+
+        .tag-category h3 {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 5px 12px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .tag:hover { background: rgba(255, 255, 255, 0.1); }
+
+        .tag.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            box-shadow: 0 2px 8px var(--primary-glow);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #5A6A9C 100%);
+            color: white;
+            box-shadow: 0 6px 16px var(--primary-glow);
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px var(--primary-glow);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.12); }
+
+        .btn-ai {
+            background: linear-gradient(135deg, #6C63FF 0%, #927AFF 100%);
+            color: white;
+        }
+
+        .btn-image {
+            background: linear-gradient(135deg, #E91E63 0%, #FF5722 100%);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Loading */
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        .btn.loading .spinner { display: block; }
+        .btn.loading .btn-text { display: none; }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 14px 20px;
+            border-radius: 12px;
+            background: #1A1F2E;
+            color: white;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            display: none;
+            z-index: 10000;
+            border-left: 4px solid var(--primary);
+            animation: slideIn 0.3s ease-out;
+            max-width: 400px;
+        }
+
+        .toast.error { border-left-color: var(--accent); }
+        .toast.success { border-left-color: var(--success); }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Image Preview */
+        .image-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .image-preview {
+            aspect-ratio: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            border: 2px dashed var(--border);
+            transition: all 0.3s;
+        }
+
+        .image-preview.has-image { border-style: solid; border-color: var(--success); }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-preview .placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .image-preview .placeholder i { font-size: 1.5rem; margin-bottom: 4px; }
+
+        .image-preview .actions {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 6px;
+            display: none;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .image-preview:hover .actions { display: flex; }
+
+        .image-preview .actions button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .image-preview .actions button:hover { background: rgba(255, 255, 255, 0.3); }
+
+        /* Voice Section */
+        .voice-row {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .voice-row .input-group { flex: 1; margin-bottom: 0; }
+
+        audio {
+            width: 100%;
+            margin-top: 12px;
+            border-radius: 8px;
+        }
+
+        /* Login Modal */
+        .login-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+        }
+
+        .login-modal {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-modal h2 {
+            margin-bottom: 8px;
+            color: white;
+        }
+
+        .login-modal p {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            font-size: 0.9rem;
+        }
+
+        .login-modal .input-group { margin-bottom: 20px; }
+
+        /* Progress Steps */
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: var(--border);
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-step .number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-dark);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .progress-step.active .number {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .progress-step.completed .number {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .progress-step span {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .progress-step.active span { color: white; }
+
+        /* Grid helpers */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .mt-3 { margin-top: 12px; }
+        .mt-4 { margin-top: 16px; }
+        .mb-4 { margin-bottom: 16px; }
+
+        /* Section divider */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 32px 0;
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Login Modal -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-modal">
+            <h2><i class="fas fa-lock"></i> Admin Access</h2>
+            <p>Enter the admin password to access the Character Creator</p>
+            <div class="input-group">
+                <input type="password" id="adminPassword" placeholder="Admin Password" autofocus>
+            </div>
+            <button class="btn btn-primary" onclick="login()">
+                <span class="btn-text"><i class="fas fa-sign-in-alt"></i> Login</span>
+                <div class="spinner"></div>
+            </button>
+        </div>
+    </div>
+
+    <div class="container" id="mainContent" style="display: none;">
+        <header>
+            <h1><i class="fas fa-wand-magic-sparkles"></i> H2U Character Creator</h1>
+            <p>CREATE AI COMPANIONS WITH GEMINI & FISH AUDIO</p>
+            <div class="security-badge">
+                <i class="fas fa-shield-halved"></i>
+                Secure Mode - API Keys Protected on Server
+            </div>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-step active" data-step="1">
+                <div class="number">1</div>
+                <span>Identity</span>
+            </div>
+            <div class="progress-step" data-step="2">
+                <div class="number">2</div>
+                <span>Personality</span>
+            </div>
+            <div class="progress-step" data-step="3">
+                <div class="number">3</div>
+                <span>AI Persona</span>
+            </div>
+            <div class="progress-step" data-step="4">
+                <div class="number">4</div>
+                <span>Visuals</span>
+            </div>
+            <div class="progress-step" data-step="5">
+                <div class="number">5</div>
+                <span>Voice</span>
+            </div>
+        </div>
+
+        <section class="grid">
+            <!-- Section 1: Basic Identity -->
+            <div class="card">
+                <h2><i class="fas fa-user"></i> Basic Identity</h2>
+                <div class="input-group">
+                    <label>Character Name *</label>
+                    <input type="text" id="charName" placeholder="e.g. Luna Chen">
+                </div>
+                <div class="grid-2">
+                    <div class="input-group">
+                        <label>Age *</label>
+                        <input type="number" id="charAge" value="24" min="18" max="99">
+                    </div>
+                    <div class="input-group">
+                        <label>Gender *</label>
+                        <select id="charGender">
+                            <option value="female">Female</option>
+                            <option value="male">Male</option>
+                            <option value="non-binary">Non-binary</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Occupation</label>
+                    <input type="text" id="charJob" placeholder="e.g. Indie Game Developer">
+                </div>
+                <div class="input-group">
+                    <label>Education</label>
+                    <input type="text" id="charSchool" placeholder="e.g. NUS Computer Science">
+                </div>
+                <div class="grid-2">
+                    <div class="input-group">
+                        <label>Orientation</label>
+                        <select id="charOrientation">
+                            <option value="Straight">Straight</option>
+                            <option value="Bisexual">Bisexual</option>
+                            <option value="Gay">Gay</option>
+                            <option value="Lesbian">Lesbian</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Height</label>
+                        <input type="text" id="charHeight" placeholder="e.g. 165cm">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Personality Tags -->
+            <div class="card">
+                <h2><i class="fas fa-tags"></i> Personality & Interests</h2>
+                <div id="tagsSections"></div>
+            </div>
+
+            <!-- Section 3: AI Persona -->
+            <div class="card full-width">
+                <h2><i class="fas fa-brain"></i> AI Persona Generation</h2>
+                <div class="grid">
+                    <div>
+                        <div class="input-group">
+                            <label>Character Description (for AI to analyze)</label>
+                            <textarea id="charBioInput" rows="5" placeholder="Describe the character's background, speaking style, quirks, and how they interact. The more detail, the better the AI persona."></textarea>
+                        </div>
+                        <button class="btn btn-ai" id="btnGeneratePersona" onclick="generatePersona()">
+                            <span class="btn-text"><i class="fas fa-magic"></i> Generate Persona with Gemini</span>
+                            <div class="spinner"></div>
+                        </button>
+                    </div>
+                    <div>
+                        <div class="input-group">
+                            <label>Headline (50 chars max)</label>
+                            <input type="text" id="charHeadline" placeholder="Auto-generated catchy headline...">
+                        </div>
+                        <div class="input-group">
+                            <label>Display Bio (User-facing)</label>
+                            <textarea id="charDisplayBio" rows="2" placeholder="Short bio for the dating profile..."></textarea>
+                        </div>
+                        <div class="input-group">
+                            <label>Persona Prompt (AI Instructions)</label>
+                            <textarea id="charPersonaPrompt" rows="5" placeholder="Detailed AI behavior instructions..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: Visuals -->
+            <div class="card full-width">
+                <h2><i class="fas fa-image"></i> Character Visuals</h2>
+                <div class="grid">
+                    <div>
+                        <div class="input-group">
+                            <label>Image Prompt (for Gemini Imagen)</label>
+                            <textarea id="imagePrompt" rows="4" placeholder="Describe the character's appearance for image generation...&#10;&#10;e.g. A 24-year-old East Asian woman with long black hair, warm smile, casual outfit, sitting at a coffee shop. Soft natural lighting. Photorealistic portrait."></textarea>
+                        </div>
+                        <button class="btn btn-image" id="btnGenerateImage" onclick="generateImage()">
+                            <span class="btn-text"><i class="fas fa-wand-sparkles"></i> Generate with Gemini Imagen 3</span>
+                            <div class="spinner"></div>
+                        </button>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">
+                            <i class="fas fa-info-circle"></i> Click multiple times to generate different variations
+                        </p>
+                    </div>
+                    <div>
+                        <label>Generated Images</label>
+                        <div class="image-preview-grid">
+                            <div class="image-preview" data-index="0">
+                                <div class="placeholder"><i class="fas fa-image"></i>Cover</div>
+                                <div class="actions">
+                                    <button onclick="setCoverImage(0)" title="Set as cover"><i class="fas fa-star"></i></button>
+                                    <button onclick="removeImage(0)" title="Remove"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                            <div class="image-preview" data-index="1">
+                                <div class="placeholder"><i class="fas fa-image"></i>Gallery</div>
+                                <div class="actions">
+                                    <button onclick="setCoverImage(1)" title="Set as cover"><i class="fas fa-star"></i></button>
+                                    <button onclick="removeImage(1)" title="Remove"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                            <div class="image-preview" data-index="2">
+                                <div class="placeholder"><i class="fas fa-image"></i>Gallery</div>
+                                <div class="actions">
+                                    <button onclick="setCoverImage(2)" title="Set as cover"><i class="fas fa-star"></i></button>
+                                    <button onclick="removeImage(2)" title="Remove"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                            <div class="image-preview" data-index="3">
+                                <div class="placeholder"><i class="fas fa-image"></i>Gallery</div>
+                                <div class="actions">
+                                    <button onclick="setCoverImage(3)" title="Set as cover"><i class="fas fa-star"></i></button>
+                                    <button onclick="removeImage(3)" title="Remove"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 5: Voice -->
+            <div class="card full-width">
+                <h2><i class="fas fa-microphone"></i> Voice Profile</h2>
+                <div class="grid">
+                    <div>
+                        <button class="btn btn-secondary mb-4" id="btnLoadVoices" onclick="loadVoices()">
+                            <span class="btn-text"><i class="fas fa-sync"></i> Load Fish Audio Voices</span>
+                            <div class="spinner"></div>
+                        </button>
+                        <div class="voice-row">
+                            <div class="input-group">
+                                <label>Select Voice Model</label>
+                                <select id="voiceSelect">
+                                    <option value="">Click "Load Voices" first...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="input-group mt-3">
+                            <label>Or Enter Voice ID Manually</label>
+                            <input type="text" id="voiceManualId" placeholder="e.g. 9fad12dc142b429d9396190b0197adb8">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="input-group">
+                            <label>Speech Rate</label>
+                            <input type="range" id="voiceRate" min="0.5" max="1.5" step="0.05" value="1.0">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted);">
+                                <span>Slow</span>
+                                <span id="rateValue">1.0x</span>
+                                <span>Fast</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary mt-4" id="btnPreviewVoice" onclick="previewVoice()">
+                            <span class="btn-text"><i class="fas fa-play"></i> Preview Voice</span>
+                            <div class="spinner"></div>
+                        </button>
+                        <audio id="audioPlayer" controls style="display: none;"></audio>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Submit -->
+            <div class="full-width">
+                <button class="btn btn-primary" id="btnCreate" onclick="createCharacter()" style="padding: 16px 32px; font-size: 1.1rem;">
+                    <span class="btn-text"><i class="fas fa-rocket"></i> Create Character & Link to H2U App</span>
+                    <div class="spinner"></div>
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // ============ CONFIGURATION ============
+        const API_BASE = "https://tkssmlkheeeuyksxknbb.supabase.co/functions/v1/character-creator-api";
+        let adminPassword = "";
+
+        // ============ TAG DATA ============
+        const TAG_CATEGORIES = [
+            {
+                name: "Personality",
+                icon: "fa-user-tag",
+                tags: ["Outgoing", "Introverted", "Adventurous", "Chill", "Ambitious", "Creative", "Funny", "Thoughtful", "Spontaneous", "Organized"]
+            },
+            {
+                name: "Interests",
+                icon: "fa-heart",
+                tags: ["Music", "Travel", "Food", "Fitness", "Gaming", "Art", "Movies", "Reading", "Photography", "Cooking", "Tech", "Nature"]
+            },
+            {
+                name: "Looking For",
+                icon: "fa-search",
+                tags: ["Casual Dating", "Serious Relationship", "Friends First", "Adventure Partner", "Deep Connection", "Taking It Slow"]
+            },
+            {
+                name: "Vibe",
+                icon: "fa-sparkles",
+                tags: ["Flirty", "Sweet", "Mysterious", "Playful", "Romantic", "Direct", "Witty", "Warm"]
+            }
+        ];
+
+        let selectedTags = new Set();
+        let generatedImages = [null, null, null, null];
+        let coverIndex = 0;
+
+        // ============ INITIALIZATION ============
+        window.onload = () => {
+            renderTags();
+            setupEventListeners();
+
+            // Check for saved password
+            const saved = sessionStorage.getItem("h2u_admin_pw");
+            if (saved) {
+                adminPassword = saved;
+                document.getElementById("loginOverlay").style.display = "none";
+                document.getElementById("mainContent").style.display = "block";
+            }
+        };
+
+        function setupEventListeners() {
+            document.getElementById("voiceRate").oninput = function() {
+                document.getElementById("rateValue").textContent = this.value + "x";
+            };
+
+            document.getElementById("adminPassword").addEventListener("keypress", (e) => {
+                if (e.key === "Enter") login();
+            });
+        }
+
+        function renderTags() {
+            const container = document.getElementById("tagsSections");
+            TAG_CATEGORIES.forEach(cat => {
+                const section = document.createElement("div");
+                section.className = "tag-category";
+                section.innerHTML = `<h3><i class="fas ${cat.icon}"></i> ${cat.name}</h3>`;
+
+                const tagsGrid = document.createElement("div");
+                tagsGrid.className = "tags-container";
+
+                cat.tags.forEach(tag => {
+                    const el = document.createElement("div");
+                    el.className = "tag";
+                    el.textContent = tag;
+                    el.onclick = () => {
+                        el.classList.toggle("active");
+                        if (selectedTags.has(tag)) {
+                            selectedTags.delete(tag);
+                        } else {
+                            selectedTags.add(tag);
+                        }
+                        updateProgress();
+                    };
+                    tagsGrid.appendChild(el);
+                });
+
+                section.appendChild(tagsGrid);
+                container.appendChild(section);
+            });
+        }
+
+        // ============ LOGIN ============
+        async function login() {
+            const password = document.getElementById("adminPassword").value;
+            if (!password) {
+                showToast("Please enter the admin password", "error");
+                return;
+            }
+
+            // Test API connection
+            try {
+                const response = await fetch(`${API_BASE}?action=list-voices`, {
+                    method: "GET",
+                    headers: { "X-Admin-Password": password }
+                });
+
+                if (response.status === 401) {
+                    showToast("Invalid password", "error");
+                    return;
+                }
+
+                adminPassword = password;
+                sessionStorage.setItem("h2u_admin_pw", password);
+                document.getElementById("loginOverlay").style.display = "none";
+                document.getElementById("mainContent").style.display = "block";
+                showToast("Welcome! API connection verified.", "success");
+            } catch (error) {
+                showToast("Connection failed: " + error.message, "error");
+            }
+        }
+
+        // ============ API CALLS ============
+        async function apiCall(action, body = null) {
+            const url = `${API_BASE}?action=${action}`;
+            const options = {
+                method: body ? "POST" : "GET",
+                headers: {
+                    "X-Admin-Password": adminPassword,
+                    "Content-Type": "application/json"
+                }
+            };
+            if (body) options.body = JSON.stringify(body);
+
+            const response = await fetch(url, options);
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || `API Error: ${response.status}`);
+            }
+            return data;
+        }
+
+        // ============ GENERATE PERSONA ============
+        async function generatePersona() {
+            const name = document.getElementById("charName").value;
+            const bio = document.getElementById("charBioInput").value;
+
+            if (!name || !bio) {
+                showToast("Please enter name and description first", "error");
+                return;
+            }
+
+            const btn = document.getElementById("btnGeneratePersona");
+            btn.classList.add("loading");
+            btn.disabled = true;
+
+            try {
+                const result = await apiCall("generate-persona", {
+                    name,
+                    age: document.getElementById("charAge").value,
+                    gender: document.getElementById("charGender").value,
+                    job: document.getElementById("charJob").value,
+                    bio,
+                    tags: Array.from(selectedTags)
+                });
+
+                document.getElementById("charHeadline").value = result.headline || "";
+                document.getElementById("charDisplayBio").value = result.display_bio || "";
+                document.getElementById("charPersonaPrompt").value = result.persona_prompt || "";
+
+                showToast("Persona generated successfully!", "success");
+                updateProgress();
+            } catch (error) {
+                showToast("Failed: " + error.message, "error");
+            } finally {
+                btn.classList.remove("loading");
+                btn.disabled = false;
+            }
+        }
+
+        // ============ GENERATE IMAGE ============
+        async function generateImage() {
+            const prompt = document.getElementById("imagePrompt").value;
+            if (!prompt) {
+                showToast("Please enter an image prompt", "error");
+                return;
+            }
+
+            const btn = document.getElementById("btnGenerateImage");
+            btn.classList.add("loading");
+            btn.disabled = true;
+
+            try {
+                const result = await apiCall("generate-image", { prompt });
+
+                if (result.image) {
+                    // Find next empty slot
+                    let targetIndex = generatedImages.findIndex(img => img === null);
+                    if (targetIndex === -1) targetIndex = generatedImages.length % 4;
+
+                    // Upload to Supabase Storage
+                    const name = document.getElementById("charName").value || "character";
+                    const fileName = `${name.toLowerCase().replace(/[^a-z0-9]/g, "_")}_${Date.now()}.png`;
+
+                    const uploadResult = await apiCall("upload-image", {
+                        base64Data: result.image.base64,
+                        fileName,
+                        mimeType: result.image.mimeType
+                    });
+
+                    generatedImages[targetIndex] = uploadResult.url;
+                    // Auto-set first generated image as cover
+                    if (coverIndex === 0 || !generatedImages[coverIndex]) {
+                        coverIndex = targetIndex;
+                    }
+                    updateImagePreviews();
+                    showToast("Image generated and uploaded!", "success");
+                    updateProgress();
+                }
+            } catch (error) {
+                showToast("Image generation failed: " + error.message, "error");
+            } finally {
+                btn.classList.remove("loading");
+                btn.disabled = false;
+            }
+        }
+
+        function updateImagePreviews() {
+            const previews = document.querySelectorAll(".image-preview");
+            previews.forEach((preview, index) => {
+                const url = generatedImages[index];
+                if (url) {
+                    preview.innerHTML = `
+                        <img src="${url}" alt="Generated ${index + 1}">
+                        <div class="actions">
+                            <button onclick="setCoverImage(${index})" title="Set as cover"><i class="fas fa-star"></i></button>
+                            <button onclick="removeImage(${index})" title="Remove"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                    preview.classList.add("has-image");
+                    if (index === coverIndex) {
+                        preview.style.borderColor = "#FFD700";
+                    }
+                } else {
+                    const label = index === 0 ? "Cover" : "Gallery";
+                    preview.innerHTML = `
+                        <div class="placeholder"><i class="fas fa-image"></i>${label}</div>
+                        <div class="actions">
+                            <button onclick="setCoverImage(${index})" title="Set as cover"><i class="fas fa-star"></i></button>
+                            <button onclick="removeImage(${index})" title="Remove"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                    preview.classList.remove("has-image");
+                    preview.style.borderColor = "";
+                }
+            });
+        }
+
+        function setCoverImage(index) {
+            if (generatedImages[index]) {
+                coverIndex = index;
+                updateImagePreviews();
+                showToast(`Image ${index + 1} set as cover`, "success");
+            }
+        }
+
+        function removeImage(index) {
+            generatedImages[index] = null;
+            if (coverIndex === index) coverIndex = generatedImages.findIndex(img => img !== null) || 0;
+            updateImagePreviews();
+        }
+
+        // ============ VOICE ============
+        async function loadVoices() {
+            const btn = document.getElementById("btnLoadVoices");
+            btn.classList.add("loading");
+            btn.disabled = true;
+
+            try {
+                const result = await apiCall("list-voices");
+                const select = document.getElementById("voiceSelect");
+                select.innerHTML = '<option value="">Select a voice...</option>';
+
+                result.models.forEach(model => {
+                    const opt = document.createElement("option");
+                    opt.value = model.id;
+                    opt.textContent = `${model.title} (${model.language})`;
+                    select.appendChild(opt);
+                });
+
+                showToast(`Loaded ${result.models.length} voices`, "success");
+                updateProgress();
+            } catch (error) {
+                showToast("Failed to load voices: " + error.message, "error");
+            } finally {
+                btn.classList.remove("loading");
+                btn.disabled = false;
+            }
+        }
+
+        async function previewVoice() {
+            const voiceId = document.getElementById("voiceManualId").value || document.getElementById("voiceSelect").value;
+            if (!voiceId) {
+                showToast("Please select or enter a voice ID", "error");
+                return;
+            }
+
+            const btn = document.getElementById("btnPreviewVoice");
+            btn.classList.add("loading");
+            btn.disabled = true;
+
+            try {
+                const name = document.getElementById("charName").value || "there";
+                const result = await apiCall("preview-voice", {
+                    voiceId,
+                    text: `Hi! I'm ${name}. I'm so excited to meet you on H2U. How has your day been going?`
+                });
+
+                const audio = document.getElementById("audioPlayer");
+                audio.src = `data:audio/mp3;base64,${result.audio}`;
+                audio.style.display = "block";
+                audio.play();
+
+                showToast("Playing voice preview...", "success");
+            } catch (error) {
+                showToast("Voice preview failed: " + error.message, "error");
+            } finally {
+                btn.classList.remove("loading");
+                btn.disabled = false;
+            }
+        }
+
+        // ============ CREATE CHARACTER ============
+        async function createCharacter() {
+            const name = document.getElementById("charName").value;
+            const personaPrompt = document.getElementById("charPersonaPrompt").value;
+
+            if (!name) {
+                showToast("Character name is required", "error");
+                return;
+            }
+            if (!personaPrompt) {
+                showToast("Please generate or write the AI persona first", "error");
+                return;
+            }
+
+            const btn = document.getElementById("btnCreate");
+            btn.classList.add("loading");
+            btn.disabled = true;
+
+            try {
+                // Prepare gallery images (excluding cover)
+                const galleryImages = generatedImages
+                    .filter((img, idx) => img && idx !== coverIndex)
+                    .filter(Boolean);
+
+                const characterData = {
+                    name,
+                    age: parseInt(document.getElementById("charAge").value),
+                    gender: document.getElementById("charGender").value,
+                    job: document.getElementById("charJob").value,
+                    school: document.getElementById("charSchool").value,
+                    orientation: document.getElementById("charOrientation").value,
+                    height: document.getElementById("charHeight").value,
+                    headline: document.getElementById("charHeadline").value,
+                    display_bio: document.getElementById("charDisplayBio").value,
+                    persona_prompt: personaPrompt,
+                    tags: Array.from(selectedTags),
+                    cover_url: generatedImages[coverIndex] || null,
+                    gallery_images: galleryImages,
+                    fish_voice_id: document.getElementById("voiceManualId").value || document.getElementById("voiceSelect").value,
+                    speech_rate: parseFloat(document.getElementById("voiceRate").value),
+                    is_human: true
+                };
+
+                const result = await apiCall("create-character", characterData);
+
+                showToast("Character created successfully! ID: " + result.character.id, "success");
+
+                // Mark all steps as completed
+                document.querySelectorAll(".progress-step").forEach(step => {
+                    step.classList.remove("active");
+                    step.classList.add("completed");
+                });
+
+            } catch (error) {
+                showToast("Failed to create character: " + error.message, "error");
+            } finally {
+                btn.classList.remove("loading");
+                btn.disabled = false;
+            }
+        }
+
+        // ============ UI HELPERS ============
+        function updateProgress() {
+            const steps = document.querySelectorAll(".progress-step");
+
+            // Step 1: Identity
+            const hasIdentity = document.getElementById("charName").value && document.getElementById("charAge").value;
+
+            // Step 2: Personality
+            const hasPersonality = selectedTags.size > 0;
+
+            // Step 3: AI Persona
+            const hasPersona = document.getElementById("charPersonaPrompt").value;
+
+            // Step 4: Visuals
+            const hasVisuals = generatedImages.some(img => img !== null);
+
+            // Step 5: Voice
+            const hasVoice = document.getElementById("voiceSelect").value || document.getElementById("voiceManualId").value;
+
+            const progress = [hasIdentity, hasPersonality, hasPersona, hasVisuals, hasVoice];
+
+            steps.forEach((step, index) => {
+                step.classList.remove("active", "completed");
+                if (progress[index]) {
+                    step.classList.add("completed");
+                } else if (index === 0 || progress[index - 1]) {
+                    step.classList.add("active");
+                }
+            });
+        }
+
+        function showToast(msg, type = "info") {
+            const toast = document.getElementById("toast");
+            toast.textContent = msg;
+            toast.className = "toast " + type;
+            toast.style.display = "block";
+            setTimeout(() => toast.style.display = "none", 4000);
+        }
+
+        // Listen for input changes to update progress
+        document.addEventListener("input", updateProgress);
+        document.addEventListener("change", updateProgress);
+    </script>
+</body>
+
+</html>
